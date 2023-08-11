@@ -2,8 +2,9 @@
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { Users } = require("../models");
+const { Users, Cars } = require("../models");
 const { sendWelcomeEmail } = require("../utils/sendMail");
+const { where } = require("sequelize");
 
 const createUser = async (req, res, next) => {
   try {
@@ -11,6 +12,10 @@ const createUser = async (req, res, next) => {
 
     const hashed = await bcrypt.hash(password, 10);
     const user = await Users.create({ username, email, password: hashed });
+
+    // y acto seguido creo el carrito
+    await Cars.create({ userId: user.id });
+
     res.status(201).end();
 
     sendWelcomeEmail(email, { username, email, id: user.id });
@@ -94,10 +99,31 @@ const confirmEmail = async (req, res, next) => {
   }
 };
 
+const uploadAvatar = async (req, res, next) => {
+  try {
+    const { file, body } = req;
+
+    const url =
+      process.env.NODE_ENV === "production"
+        ? `${process.env.URL}/avatars/${file.filename}`
+        : `${process.env.URL}:${process.env.PORT}/avatars/${file.filename}`;
+    await Users.update(
+      { profileImage: url },
+      {
+        where: { id: Number(body.id) },
+      }
+    );
+    res.json();
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createUser,
   loginUser,
   confirmEmail,
+  uploadAvatar,
 };
 
 // protegiendo endpoints -> autenticando peticiones
