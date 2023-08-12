@@ -2,7 +2,7 @@ require("dotenv").config();
 
 module.exports = {
   development: {
-    username: "iannacus",
+    username: "postgres",
     password: "root",
     database: "ecommerce_db",
     port: 5432,
@@ -11,7 +11,7 @@ module.exports = {
     logging: false,
   },
   test: {
-    username: "iannacus",
+    username: "postgres",
     password: "root",
     database: "ecommerce_db",
     host: "127.0.0.1",
