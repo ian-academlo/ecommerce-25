@@ -19,10 +19,9 @@ router.post("/login", loginUserValidator, loginUser);
 
 router.post("/confirm-email", confirmEmail);
 
-router
-  .route("/users")
-  .post(registerUserValidator, createUser)
-  .put(authenticate, upload.single("avatar"), uploadAvatar);
+router.route("/users").post(registerUserValidator, createUser);
+
+router.route("/users/:id").put(upload.single("avatar"), uploadAvatar);
 
 router.get(
   "/confidential",

@@ -101,7 +101,8 @@ const confirmEmail = async (req, res, next) => {
 
 const uploadAvatar = async (req, res, next) => {
   try {
-    const { file, body } = req;
+    const { file } = req;
+    const { id } = req.params;
 
     const url =
       process.env.NODE_ENV === "production"
@@ -110,7 +111,7 @@ const uploadAvatar = async (req, res, next) => {
     await Users.update(
       { profileImage: url },
       {
-        where: { id: Number(body.id) },
+        where: { id },
       }
     );
     res.json();

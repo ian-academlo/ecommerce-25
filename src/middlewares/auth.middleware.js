@@ -4,7 +4,7 @@ require("dotenv").config();
 const authenticate = async (req, res, next) => {
   try {
     // recuperar el token
-    const token = req.headers.authorization.split(" ")[1];
+    let token = req.headers.authorization;
     // Bearer eyJhbGciO => ['Berarer', 'eyJhbGciO...']
     if (!token) {
       return next({
@@ -13,7 +13,7 @@ const authenticate = async (req, res, next) => {
         error: "No token present in headers",
       });
     }
-
+    token = token.split(" ")[1];
     // verificar el token
     // si el token es válido => nos decodifica la informacion y devuelve el objeto con la info del usuario
     // si no es valido lanza una excepción -> que tenemos que manejarla con un catch
